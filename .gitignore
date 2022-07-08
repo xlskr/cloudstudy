@@ -1,0 +1,11 @@
+# Project exclude paths
+/common/target/
+/focus/target/
+/getway/target/
+/hotel/target/
+/mainindex/target/
+/report/target/
+/shops/target/
+/statistics/target/
+/system/target/
+/targets/target/

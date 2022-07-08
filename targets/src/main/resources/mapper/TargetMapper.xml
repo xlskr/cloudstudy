@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TargetMapper">
+
+
+    <insert id="add" parameterType="Target" keyProperty="id" useGeneratedKeys="true">
+        insert into target(id,name,type,createTime)
+        values (#{id},#{name},#{type},,#{createTime})
+    </insert>
+
+
+    <select id="findAll" parameterType="java.util.Map" resultType="Target">
+        select  * from target t where 1=1
+        <if test="keywords!=null and keywords !=''">
+            and name like concat('%', #{keywords}, '%')
+        </if>
+        <if test="roleId!=null and roleId !=''">
+            and exists (select 1 from role_target rt where t.id=rt.targetId and rt.roleId=#{roleId})
+        </if>
+    </select>
+
+    <select id="getDeatilById" parameterType="java.lang.Integer" resultType="Target">
+        select * from target where id=#{id}
+    </select>
+
+    <update id="edit" parameterType="Role">
+        update target
+        set type=#{type},
+            name=#{name}
+        where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete  from target where id=#{id}
+    </delete>
+
+    <!--酒店关联用户id和角色id-->
+    <select id="selectUnCheckedTargets" parameterType="java.lang.Integer" resultType="Target">
+        select  * from target t where  (select 1 from role_target rt where t.id=rt.targetId and exists (select 1 from hotel h where h.id=#{hotelId} and h.roleId=rt.roeId))
+    </select>
+
+    <select id="selectCheckedTargetsByShopsId" parameterType="java.lang.Integer" resultType="Target">
+        SELECT
+            *
+        FROM
+            target t
+        WHERE
+            (
+            SELECT
+                1
+            FROM
+                role_target rt
+            WHERE
+                t.id = rt.targetId
+              AND EXISTS (
+                    SELECT
+                        1
+                    FROM
+                        user_shops us
+                    WHERE
+                        us.shopsId = #{shopsId} and exists(select 1 from user_role ur where ur.userId=us.userId and rt.roleId=ur.roleId)))
+    </select>
+</mapper>

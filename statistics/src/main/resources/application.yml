@@ -1,0 +1,19 @@
+
+#服务配置
+server:
+  port: 9009
+#spring配置
+spring:
+  #1.应用配置
+  application:
+    name: statistics #指定服务名
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 47.100.171.118:8090
+        namespace: public
+        ip: 127.0.0.1
+
+
+
+

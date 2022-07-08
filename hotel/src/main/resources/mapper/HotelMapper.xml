@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="HotelMapper">
+
+    <insert id="addHotel" parameterType="Hotel">
+        insert into hotel(id,linkName,name,linkphone,createTime) values
+            (#{id},#{linkName},#{name},#{linkphone},#{createTime})
+    </insert>
+
+    <update id="update" parameterType="Hotel">
+        update hotel set
+                name=#{name},
+                linkName=#{linkName},
+                linkPhone=#{linkphone},
+                userId=#{userId},
+                roleId=#{roleId}
+        where id=#{id}
+    </update>
+
+    <select id="findAll" parameterType="java.util.Map" resultType="Hotel">
+        select  * from hotel where 1=1
+        <if test="keywords!=null and keywords !=''">
+            and name like concat('%', #{keywords}, '%')
+        </if>
+    </select>
+
+    <select id="getDeatilById" parameterType="java.lang.Integer" resultType="Hotel">
+        select * from hotel where id=#{id}
+    </select>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from hotel where id=#{id}
+    </delete>
+</mapper>

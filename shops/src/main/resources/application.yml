@@ -1,0 +1,32 @@
+
+#服务配置
+server:
+  port: 9007
+#spring配置
+spring:
+  #1.应用配置
+  application:
+    name: shops #指定服务名
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 47.100.171.118:8090
+        namespace: public
+        ip: 127.0.0.1
+
+  #2.数据库连接池
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://47.100.171.118:3306/yxydb?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: 1qaz@WSX
+
+mybatis:
+  mapperLocations: classpath:mapper/*.xml
+  type-aliases-package: com.xulei.cn.entities.shops
+  configuration:
+    cache-enabled: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
+

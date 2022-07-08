@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SysUserMapper">
+
+
+    <select id="getSysUser" parameterType="java.lang.Integer" resultType="SysUser">
+        select * from sys_user where id=#{id}
+    </select>
+
+    <insert id="addUser" parameterType="SysUser" keyProperty="id" useGeneratedKeys="true">
+        insert into sys_user(id,hotelId,name,phone,isSuper,createTime) values
+             (#{id},#{hotelId},#{name},#{phone},#{isSuper},#{createTime})
+    </insert>
+
+    <insert id="assginRole" parameterType="UserAndRole">
+        insert into user_role(id,userId,roleId) values
+            (#{id},#{userId},#{roleId})
+    </insert>
+
+    <select id="findByUser" parameterType="SysUser" resultType="SysUser">
+        select * from sys_user
+        where 1=1
+        <if test="phone!=null and phone !=''">
+            and phone=#{phone}
+        </if>
+        <if test="id !=null and id !=''">
+            and id &lt;&gt; #{id}
+        </if>
+    </select>
+
+    <select id="getUserById" parameterType="java.lang.String" resultType="SysUser">
+        select * from sys_user
+        where 1=1 and id=#{id}
+    </select>
+
+    <update id="update" parameterType="SysUser">
+        update sys_user
+                set name=#{name}
+         where id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.Integer">
+        update  sys_user set delflag=1 where id=#{id}
+    </delete>
+
+    <select id="userExistsByMobilePhone" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+             *
+        from
+             sys_user
+        where phone = #{mobilePhone} and delflag=0
+    </select>
+
+    <!-- 生成短信验证码 -->
+    <insert id="saveVerificationCode" parameterType="java.util.Map">
+        <if test="mobilePhone != null and mobilePhone != '' and ipAddress != null and ipAddress != '' and content != null and content != ''">
+            insert into b_msgsend_cache
+            (
+            <!-- type, -->
+            sendTarget,
+            verificationCode,
+            sendContent,
+            sendIpAddress,
+            caller
+            ) values (
+            <!-- #{type}, -->
+            #{mobilePhone},
+            #{verificationCode},
+            #{content},
+            #{ipAddress},
+            #{caller}
+            )
+        </if>
+    </insert>
+
+    <!-- 校验验证码,5分钟内有效 -->
+    <select id="checkVerificationCode" parameterType="java.util.Map" resultType="java.lang.Integer">
+        <if test="mobilePhone != null and mobilePhone != '' and verificationCode != null and verificationCode != ''">
+            select count(1) from b_msgsend_cache where sendTarget=#{mobilePhone} and verificationCode=#{verificationCode}
+            and TIMESTAMPDIFF(MINUTE, sendTime, now()) &lt;= 5
+            <!-- order by sendTime desc LIMIT 1 -->
+        </if>
+    </select>
+
+    <!-- 删除验证码 -->
+    <delete id="deleteVerificationCode" parameterType="java.util.Map">
+        <if test="mobilePhone != null and mobilePhone != ''">
+            delete from b_msgsend_cache where sendTarget = #{mobilePhone}
+        </if>
+    </delete>
+
+    <select id="findMenusByUser" parameterType="SysUser" resultType="Menu">
+        select * from sys_menu a where 1=1 and  exists (select 1 from role_menu b where b.menuId=a.id  and b.roleId in(
+               select roleId from user_role where userId=#{id}
+            ))
+    </select>
+
+    <delete id="deleteUserAndRole" parameterType="UserAndRole">
+        delete from user_role where roleId=#{roleId} and userId=#{userId}
+    </delete>
+
+    <select id="finUserAndRole" parameterType="UserAndRole" resultType="UserAndRole">
+        select * from user_role where userId=#{userId} limit 1
+    </select>
+
+    <select id="getShopsUser" parameterType="java.lang.Integer" resultType="ShopsUser">
+        select  a.*,c.id roleId,c.name roleName,e.id shopsId,e.name shopsName from sys_user a,user_role b,role c,user_shops d,shops e where a.id=b.userId and b.roleId=c.id and a.id=d.userId and d.shopsId=e.id and a.delflag=0
+        and a.id=#{id}
+    </select>
+
+    <select id="getAllShopsUser" parameterType="java.util.Map" resultType="ShopsUser">
+        select  a.*,c.id roleId,c.name roleName,e.id shopsId,e.name shopsName from sys_user a,user_role b,role c,user_shops d,shops e where a.id=b.userId and b.roleId=c.id and a.id=d.userId and d.shopsId=e.id and a.delflag=0
+    </select>
+</mapper>

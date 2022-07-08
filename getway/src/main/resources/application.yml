@@ -1,0 +1,88 @@
+server:
+  port: 8088
+spring:
+  application:
+    name: api-getway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 47.100.171.118:8090
+        namespace: public
+        ip: 127.0.0.1
+
+    gateway:
+      routes:
+        - id: system_route
+          uri: lb://system
+          predicates:
+            - Path=/system_server/**
+          filters:
+            - StripPrefix=1
+
+        - id: hotel_route
+          uri: lb://hotel
+          predicates:
+            - Path=/hotel_server/**
+          filters:
+            - StripPrefix=1
+
+        - id: target_route
+          uri: lb://target
+          predicates:
+            - Path=/target_server/**
+          filters:
+            - StripPrefix=1
+
+        - id: shops_route
+          uri: lb://shops
+          predicates:
+            - Path=/shops_server/**
+          filters:
+            - StripPrefix=1
+
+        - id: focus_route
+          uri: lb://focus
+          predicates:
+            - Path=/focus_server/**
+          filters:
+            - StripPrefix=1
+
+        - id: mainindex_route
+          uri: lb://mainindex
+          predicates:
+            - Path=/mainindex_server/**
+          filters:
+            - StripPrefix=1
+
+        - id: report_route
+          uri: lb://report
+          predicates:
+            - Path=/report_server/**
+          filters:
+            - StripPrefix=1
+
+        - id: sta_route
+          uri: lb://shops
+          predicates:
+            - Path=/shops_server/**
+          filters:
+            - StripPrefix=1
+
+      # 网关跨域配置start---------------------------------
+      # 开启网关的跨域功能，具体微服务上的跨域需要进行关闭，否则无效
+      globalcors:
+        cors-configurations:
+          '[/**]': # 匹配所有请求
+            allowedOrigins: "*" # 跨域处理 允许所有的域
+            allowedMethods: # 支持的方法
+              - GET
+              - POST
+              - PUT
+              - DELETE
+        # 网关跨域配置end---------------------------------
+
+
+#自定义非拦截路径
+const:
+  nointercetorpath: .*/((sys/getVerificationCode/*)|(sys/login/*)).*
+

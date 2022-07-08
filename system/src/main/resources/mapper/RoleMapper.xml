@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="RoleMapper">
+
+
+    <insert id="addRole" parameterType="Role" keyProperty="id" useGeneratedKeys="true">
+        insert into sys_role(id,name,hotelId,description,createTime)
+        values (#{id},#{name},#{hotelId},#{description},#{createTime})
+    </insert>
+
+
+    <select id="findAll" parameterType="java.util.Map" resultType="Role">
+        select  * from sys_role where 1=1
+        <if test="keywords!=null and keywords !=''">
+            and name like concat('%', #{keywords}, '%')
+        </if>
+    </select>
+
+    <select id="getRole" parameterType="java.lang.Integer" resultType="Role">
+        select * from sys_role where id=#{id}
+    </select>
+
+    <update id="editRole" parameterType="Role">
+        update sys_role
+                set description=#{description},
+                    name=#{name}
+        where id=#{id}
+    </update>
+
+    <delete id="deleteRole" parameterType="java.lang.Integer">
+        delete  from sys_role where id=#{id}
+    </delete>
+
+
+    <delete id="deleteRoleAndMenu" parameterType="java.lang.String">
+        delete from role_menu where roleId=#{roleId}
+    </delete>
+
+    <insert id="assginMenus" parameterType="java.util.List">
+        INSERT INTO role_menu
+        (id, menuId, roleId)
+        VALUES
+        <foreach collection ="list" item="user" separator =",">
+            (#{user.id}, #{user.menuId}, #{user.roleId})
+        </foreach >
+    </insert>
+
+    <insert id="assginTargets" parameterType="java.util.List">
+        INSERT INTO role_target
+        (id, targetId, roleId)
+        VALUES
+        <foreach collection ="list" item="user" separator =",">
+            (#{user.id}, #{user.targetId}, #{user.roleId})
+        </foreach >
+    </insert>
+
+    <insert id="assginShops" parameterType="java.util.List">
+        INSERT INTO role_data
+        (id, shopsId, roleId)
+        VALUES
+        <foreach collection ="list" item="user" separator =",">
+            (#{user.id}, #{user.shopsId}, #{user.roleId})
+        </foreach >
+    </insert>
+</mapper>
