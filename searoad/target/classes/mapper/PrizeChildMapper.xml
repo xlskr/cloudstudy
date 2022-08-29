@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PrizeChildMapper">
+
+    <insert id="add" parameterType="PrizeChild">
+        insert into prize_child(id,guessId,name)
+        values (#{id},#{guessId},#{name})
+    </insert>
+
+    <select id="getDeatilById" parameterType="java.lang.String" resultType="PrizeChild">
+        select *  from prize_child where id=#{id};
+    </select>
+
+    <update id="edit" parameterType="PrizeChild">
+        update
+            prize_child
+        set
+            name= #{name}
+        where id=#{id}
+    </update>
+
+    <select id="findAll" parameterType="java.util.Map" resultType="PrizeChild">
+        select *  from prize_child where 1=1 and guessId=#{guessId}
+        <if test="keywords !=null and keywords !=''">
+            and name like concat('%', #{keywords}, '%')
+        </if>
+        <if test="customerId !=null and customerId !=''">
+            and id in(select childId from customer_guessprize where customerId=#{customerId})
+        </if>
+    </select>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from prize_child where id=#{id}
+    </delete>
+
+    <select id="checkRepatName" parameterType="PrizeChild" resultType="PrizeChild">
+        select * from prize_child where name=#{name} and guessId=#{guessId}
+        <if test="id !=null and id !=''">
+            and id &lt;&gt;#{id}
+        </if>
+        limit 1
+    </select>
+
+</mapper>

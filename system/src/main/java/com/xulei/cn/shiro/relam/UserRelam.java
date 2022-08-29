@@ -39,6 +39,8 @@ public class UserRelam extends AuthorizingRealm {
             userAndRole=userService.finUserAndRole(userAndRole);
             result.setRoleId(userAndRole.getRoleId());
             //构造方法：安全数据，密码，realm域名
+            //根据角色ID找出MENUAPI
+
             SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(result,"123456",this.getName());
             return info;
         }

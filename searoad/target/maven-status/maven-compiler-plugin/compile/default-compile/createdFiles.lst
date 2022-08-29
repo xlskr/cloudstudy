@@ -1,0 +1,5 @@
+com\xulei\cn\SeaRoadApplication.class
+com\xulei\cn\fegin\H5Service.class
+com\xulei\cn\service\impl\PrizeChidServiceImpl.class
+com\xulei\cn\service\impl\GuessPrizeServiceImpl.class
+com\xulei\cn\service\impl\PrizesQuizServiceImpl.class

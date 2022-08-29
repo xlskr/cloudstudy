@@ -4,6 +4,7 @@ package com.xulei.cn.controller;
 import com.xulei.cn.entities.ProfileResult;
 import com.xulei.cn.entities.Result;
 import com.xulei.cn.entities.ResultCode;
+import com.xulei.cn.entities.system.MenuApi;
 import com.xulei.cn.entities.system.MenuLevel;
 import com.xulei.cn.service.UserService;
 import com.xulei.cn.utils.SmsSendUtils;
@@ -12,6 +13,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMethod;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -94,7 +96,7 @@ public class LoginController{
      * flag,mobilephone,code
      * 根据手机号获取验证码
      */
-    @PutMapping (value = "/getVerificationCode/{mobilePhone}")
+    @PutMapping(value = "/getVerificationCode/{mobilePhone}")
     public Result getVerificationCode(@PathVariable String mobilePhone) throws Exception {
         Map<String,Object> pd=new HashMap();
         pd.put("mobilePhone",mobilePhone);
@@ -123,31 +125,40 @@ public class LoginController{
      * @return
      */
     @RequestMapping(value="/isPermitted",method = RequestMethod.GET)
-    public boolean isPermitted(@RequestParam(value = "requestURI",required = false) String requestURI, @RequestHeader(value = "Authorization",required = false) String Authorization){
+    public boolean isPermitted(@RequestParam(value = "requestURI",required = true) String requestURI, @RequestHeader(value = "Authorization",required = false) String Authorization
+            , @RequestParam(value = "method",required = true) HttpMethod method){
         if(StringUtils.isEmpty(Authorization)){
             return true;
         }else{
             ProfileResult principal = (ProfileResult)SecurityUtils.getSubject().getPrincipal();
             System.out.println(">>>>>>>>>>>"+ requestURI);
             System.out.println(">>>>>>>>>>>>"+ principal);
-            if(principal !=null){
-                //由principal 分配api部分暂时没有做默认先控制菜单权限 。 以后再做
-                List<MenuLevel> menus = principal.getMenus();
-                StringBuilder s=new StringBuilder(".*/(");
-                for(int i=0;i<menus.size();i++){
-                    s=s.append("(").append(menus.get(i).getCode()).append("/*)|");
-                    List<MenuLevel> chidrens = menus.get(i).getChidrens();
-                    for(int j=0;chidrens!=null&&j<chidrens.size();j++){
-                        s=s.append("(").append(chidrens.get(j).getCode()).append("/*)|");
-                    }
+            List<MenuApi> menuApis = principal.getMenuApis();
+            for(int i=0;i<menuApis.size();i++){
+                MenuApi menuApi = menuApis.get(i);
+                if(requestURI.matches(menuApi.getUrl())&&method.matches(menuApi.getRequestMethod())){
+                    return false;
                 }
-                s.append("(sys/profile/*)|(sys/loginOut/*)|(sys/user/*)|(sys/menu/selectCheckedMenus/*)|")
-                        .append("(targetMenu/target/selectCheckedTargets/*)|(targetMenu/target/selectUnCheckedTargets/*)|(targetMenu/target/selectCheckedTargetsByShopsId/*)|(/targetMenu/userTargetAnalyse/*)|")
-                        .append("(/shopsMenu/shops/selectCheckedShops/*)|(/shopsMenu/shops/selectUnCheckedShops/*)")
-                        .append(").*");
-                System.out.println(">>>>>>>>>>>>>>>>>此角色的api权限>>>>>>>>>>>>>>>"+s);
-                return !requestURI.matches(s.toString());
             }
+
+//            if(principal !=null){
+//                //由principal 分配api部分暂时没有做默认先控制菜单权限 。 以后再做
+//                List<MenuLevel> menus = principal.getMenus();
+//                StringBuilder s=new StringBuilder(".*/(");
+//                for(int i=0;i<menus.size();i++){
+//                    s=s.append("(").append(menus.get(i).getCode()).append("/*)|");
+//                    List<MenuLevel> chidrens = menus.get(i).getChidrens();
+//                    for(int j=0;chidrens!=null&&j<chidrens.size();j++){
+//                        s=s.append("(").append(chidrens.get(j).getCode()).append("/*)|");
+//                    }
+//                }
+//                s.append("(sys/profile/*)|(sys/loginOut/*)|(sys/user/*)|(sys/menu/findMenusByHotelId/*)|(sys/menu/selectCheckedMenus/*)|")
+//                        .append("(targetMenu/target/selectCheckedTargets/*)|(targetMenu/target/selectUnCheckedTargets/*)|(targetMenu/target/selectCheckedTargetsByShopsId/*)|(/targetMenu/userTargetAnalyse/*)|")
+//                        .append("(/shopsMenu/shops/selectCheckedShops/*)|(/shopsMenu/shops/selectUnCheckedShops/*)")
+//                        .append(").*");
+//                System.out.println(">>>>>>>>>>>>>>>>>此角色的api权限>>>>>>>>>>>>>>>"+s);
+//                return !requestURI.matches(s.toString());
+//            }
             return true;
         }
     }

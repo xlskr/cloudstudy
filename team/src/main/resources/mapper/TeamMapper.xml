@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TeamMapper">
+
+    <insert id="add" parameterType="Team">
+        insert into team(id,name,pic,year,registrationTimeStart,registrationTimeEnd,state,price,teamTimeEnd
+        ,teamTimeStart,describe,logo)
+        values (#{id},#{name},#{pic},#{year},#{registrationTimeStart},#{registrationTimeEnd},#{state},#{price},#{teamTimeEnd},
+                #{teamTimeStart},#{describe},#{logo})
+    </insert>
+
+    <update id="update" parameterType="Team">
+        update team
+            set name=#{name},
+                pic=#{pic},
+                year=#{year},
+                registrationTimeStart=#{registrationTimeStart},
+                registrationTimeEnd=#{registrationTimeEnd},
+                state=#{state},
+                price=#{price},
+                teamTimeEnd=#{teamTimeEnd},
+                teamTimeStart=#{teamTimeStart},
+                describe=#{describe},
+                logo=#{logo}
+          where id=#{id}
+    </update>
+
+    <select id="getDeatilById" parameterType="string" resultType="Team">
+        select * from team where id=#{id}
+    </select>
+
+    <select id="getAllByPage" parameterType="map" resultType="Team">
+        select * from team
+        where 1=1
+        <if test="year!=null and year !=''">
+            and year=#{year}
+        </if>
+        <if test="keywords !=null and keywords !=''">
+            and name like concat('%', #{keywords}, '%')
+        </if>
+    </select>
+
+    <delete id="delete" parameterType="string">
+        delete from team where id=#{id}
+    </delete>
+
+</mapper>

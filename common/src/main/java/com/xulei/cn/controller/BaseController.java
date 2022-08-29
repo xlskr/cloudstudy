@@ -1,38 +1,44 @@
 package com.xulei.cn.controller;
 
+import com.xulei.cn.utils.QiniuUtil;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.UUID;
 
 public class BaseController {
 
-    protected HttpServletRequest httpServletRequest;
-    protected HttpServletResponse httpServletResponse;
-    protected String hotelId;
-    protected String roleId;
-
 
     /**
-     * 在进入控制器方法执行的内容
-     * @param request
-     * @param response
+     * 图片上传
+     * @param file
+     * @return
      */
-    @ModelAttribute
-    protected void setRequestAndResponse(HttpServletRequest request,HttpServletResponse response){
-        this.httpServletRequest=request;
-        this.httpServletResponse=response;
-        if(!StringUtils.isEmpty(request.getParameter("hotelId"))){
-            this.hotelId=hotelId;
+    @RequestMapping(value="/imgs", method = RequestMethod.POST)
+    public String uploadImg(@RequestParam("file") MultipartFile  file) {
+        String filename = file.getOriginalFilename();
+        FileInputStream inputStream = null;
+        try {
+            inputStream = (FileInputStream) file.getInputStream();
+            filename = UUID.randomUUID()+ filename;
+            String link = QiniuUtil.uploadImgToQiNiu(inputStream, filename);
+            return link;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        if(!StringUtils.isEmpty(request.getParameter("roleId"))){
-            this.roleId=roleId;
-        }
+        //为文件重命名：uuid+filename
+        return "";
     }
+
 
 }

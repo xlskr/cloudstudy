@@ -1,7 +1,7 @@
 
 #服务配置
 server:
-  port: 9004
+  port: 8014
 #spring配置
 spring:
   #1.应用配置
@@ -10,8 +10,8 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 47.100.171.118:8090
-        namespace: public
+        server-addr: 172.19.87.61:8090
+        namespace: 622aa46c-9f6f-4620-908d-61232ec9c438
         ip: 127.0.0.1
 
   redis:
@@ -23,7 +23,7 @@ spring:
   #2.数据库连接池
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://47.100.171.118:3306/yxydb?useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://47.100.171.118:3306/searoad?useUnicode=true&characterEncoding=utf8
     username: root
     password: 1qaz@WSX
 

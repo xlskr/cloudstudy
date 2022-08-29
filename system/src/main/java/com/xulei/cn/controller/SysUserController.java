@@ -23,17 +23,11 @@ public class SysUserController {
     @Autowired
     private UserService userService;
 
-    //针对酒店里的门店用户的查询
-    @GetMapping(value = "/shopsUser/id/{id}")
-    public ShopsUser getDetailById(@PathVariable String id){
-        return userService.getShopsUser(id);
-    }
 
-
-    @GetMapping(value = "/shopsUser/list")
-    public PageInfo<ShopsUser> getAllShopsUser(@RequestParam Map map){
-        return userService.getAllShopsUser(map);
-    }
+    @PutMapping(value = "/shopsUser/isQuit")
+    public int isQuit(@RequestBody Map map){
+        return userService.isQuit(map);
+    };
 
     /**
      * 用户的新增

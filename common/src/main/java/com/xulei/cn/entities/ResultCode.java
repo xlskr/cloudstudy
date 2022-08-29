@@ -9,7 +9,8 @@ public enum ResultCode {
     UNAUTHORISE(false,10003,"权限不足"),
     SERVER_ERROR(false,99999,"抱歉，系统繁忙，请稍后重试！"),
     MOBILEORPASSWORDERROR(false,3333 ,"您的手机密码错误" ),
-    EXCEPTION(false,500,"系统发生异常");
+    EXCEPTION(false,500,"系统发生异常"),
+    UNNOTOKEN(false,7777,"token已失效");
 
     //---用户操作返回码----
     //---企业操作返回码----

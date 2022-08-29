@@ -41,14 +41,19 @@ public class MenuController {
         return new Result(ResultCode.SUCCESS, MenuUtils.getChildren("0",all));
     }
 
+    @GetMapping(value = "/findMenusByHotelId")
+    public Result findAllByHotelId(@RequestParam Map map){
+        List<Menu> all = menuService.findAll(map);
+        return new Result(ResultCode.SUCCESS, MenuUtils.getChildren("0",all));
+    }
+
     //根据角色查询已勾选的菜单
     @GetMapping(value = "/selectCheckedMenus/{roleId}")
-    public Result selectCheckedMenus(@RequestBody String roleId) {
+    public Result selectCheckedMenus(@PathVariable String roleId) {
         //3.调用service完成角色分配
         List<Menu> menus=menuService.selectCheckedMenus(roleId);
         return new Result(ResultCode.SUCCESS, MenuUtils.getChildren("0",menus));
     }
-
 
     //修改    先不做
     @PutMapping
@@ -59,7 +64,6 @@ public class MenuController {
             return Result.FAIL();
         }
     }
-
 
     @DeleteMapping(value="/{id}")
     public Result deleteMenu(@PathVariable String id){

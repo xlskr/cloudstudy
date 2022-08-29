@@ -15,7 +15,7 @@ public class Role implements Serializable {
     private String description;
 
     //酒店id
-    private String hotelId;
+    private String clubId;
 
     private Date createTime;
 

@@ -6,7 +6,7 @@ import com.xulei.cn.service.MenuService;
 import com.xulei.cn.utils.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -23,6 +23,9 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public int addMenu(Menu menu) {
         menu.setId(idWorker.nextId()+"");
+        if(StringUtils.isEmpty(menu.getMenu_order())){
+            menu.setMenu_order(0);
+        }
         //去重以后做
         return daoSupport.save("MenuMapper.addMenu",menu);
     }
@@ -46,6 +49,9 @@ public class MenuServiceImpl implements MenuService {
             menuDb.setCode(menu.getCode());
             menuDb.setDescription(menu.getDescription());
             menuDb.setName(menu.getName());
+            if(StringUtils.isEmpty(menu.getMenu_order())){
+                menuDb.setMenu_order(0);
+            }
             return daoSupport.update("MenuMapper.editMenu", menuDb);
         }
         return -1;

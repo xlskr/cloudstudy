@@ -2,7 +2,6 @@ package com.xulei.cn.controller;
 
 import com.xulei.cn.entities.Result;
 import com.xulei.cn.entities.ResultCode;
-import com.xulei.cn.entities.system.Menu;
 import com.xulei.cn.entities.system.Role;
 import com.xulei.cn.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,23 +59,23 @@ public class RoleController {
     }
 
     //为角色赋予菜单
-    @RequestMapping(value = "/assginMenus", method = RequestMethod.PUT)
+    @RequestMapping(value = "/assginMenusAndMenuApi", method = RequestMethod.PUT)
     public Result assginMenus(@RequestBody Map map) {
         String roleId=map.get("id").toString();
         List<String> menusIds = (List<String>) map.get("menusIds");
-
+        List<String> menusApiIds = (List<String>) map.get("menusApiIds");
         //3.调用service完成角色分配
         roleService.assginMenus(roleId,menusIds);
+        roleService.assginMenusApi(roleId,menusApiIds);
         return new Result().SUCCESS();
     }
 
 
-    //为角色配置指标
+    //为角色配置api
     @RequestMapping(value = "/assginTargets", method = RequestMethod.PUT)
     public Result assginTargets(@RequestBody Map map) {
         String roleId=map.get("id").toString();
         List<String> targetIds = (List<String>) map.get("targetIds");
-
         //3.调用service完成角色分配
         roleService.assginTargets(roleId,targetIds);
         return new Result().SUCCESS();

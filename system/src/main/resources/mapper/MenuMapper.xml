@@ -4,8 +4,8 @@
 
 
     <insert id="addMenu" parameterType="Menu">
-            insert into sys_menu(id,name,code,description,menu_order,pid)
-            values (#{id},#{name},#{code},#{description},#{menu_order},#{pid})
+            insert into sys_menu(id,name,code,description,menu_order,pid,icon)
+            values (#{id},#{name},#{code},#{description},#{menu_order},#{pid},#{icon})
     </insert>
 
     <select id="getgetMenuDetail" parameterType="java.lang.String" resultType="Menu">
@@ -23,7 +23,7 @@
         </if>
     </select>
 
-    <select id="selectCheckedMenus" parameterType="java.lang.Integer" resultType="Menu">
+    <select id="selectCheckedMenus" parameterType="java.lang.String" resultType="Menu">
         select  * from sys_menu where 1=1
        and exists (select 1 from role_menu rm where rm.menuId=sys_menu.id and rm.roleId=#{id})
 
@@ -34,12 +34,13 @@
         update sys_menu
                set name=#{name},
                    code=#{code},
-                   description=#{description}
+                   description=#{description},
+                   icon=#{icon},
                    menu_order=#{menu_order}
         where id=#{id}
     </update>
 
-    <delete id="deleteMenu" parameterType="java.lang.Integer">
+    <delete id="deleteMenu" parameterType="java.lang.String">
         delete from sys_menu where id=#{id}
     </delete>
 

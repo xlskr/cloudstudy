@@ -5,19 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.xulei.cn</groupId>
-    <artifactId>cloudstudy</artifactId>
+    <artifactId>searoadapplet</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>common</module>
-        <module>system</module>
-        <module>hotel</module>
-        <module>shops</module>
         <module>getway</module>
-        <module>mainindex</module>
-        <module>statistics</module>
-        <module>focus</module>
-        <module>report</module>
-        <module>targets</module>
+        <module>h5</module>
+        <module>searoad</module>
+        <module>system</module>
+        <module>team</module>
     </modules>
     <packaging>pom</packaging>  <!--pom聚合复工-->
 

@@ -4,7 +4,9 @@ import com.xulei.cn.entities.system.Menu;
 import com.xulei.cn.entities.system.MenuLevel;
 import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class MenuUtils {
 
@@ -32,6 +34,8 @@ public class MenuUtils {
         m.setMenu_order(menu.getMenu_order());
         m.setDescription(menu.getDescription());
         m.setName(menu.getName());
+        m.setIcon(menu.getIcon());
+//        m.setMenuApi(MenuApiSelectUtils.selectApi(menu.getId()));
         m.setChidrens(getChildren(menu.getId(),menuList));
         return m;
     }

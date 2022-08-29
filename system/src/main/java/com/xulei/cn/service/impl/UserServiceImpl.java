@@ -74,11 +74,15 @@ public class UserServiceImpl extends BaseService implements UserService {
             return -1;
 
         //根据用户id查询数据库
-        SysUser userDbs= (SysUser) daoSupport.findForObject("SysUserMapper.getUserById",user.getId());
+//        SysUser userDbs= (SysUser) daoSupport.findForObject("SysUserMapper.getUserById",user.getId());
         userDb.setName(user.getName());
         userDb.setPhone(user.getPhone());
+        userDb.setRemark(user.getRemark());
+        userDb.setAiNum(user.getAiNum());
+        userDb.setSex(user.getSex());
+        userDb.setUserNum(user.getUserNum());
         //
-        return daoSupport.update("SysUserMapper.update",userDbs);
+        return daoSupport.update("SysUserMapper.update",userDb);
     }
 
     @Override
@@ -104,17 +108,6 @@ public class UserServiceImpl extends BaseService implements UserService {
         return (List<Menu>) daoSupport.findForList("SysUserMapper.findMenusByUser",user);
     }
 
-    @Override
-    public ShopsUser getShopsUser(String id) {
-        return (ShopsUser) daoSupport.findForObject("SysUserMapper.getShopsUser",id);
-    }
-
-    @Override
-    public PageInfo<ShopsUser> getAllShopsUser(Map map) {
-        Map pageParms = this.getPageParms(map);
-        List<ShopsUser> shopsUsers= (List<com.xulei.cn.entities.system.ShopsUser>) daoSupport.findForList("SysUserMapper.getAllShopsUser",map);
-        return new PageInfo<>(shopsUsers);
-    }
 
     @Override
     public int delete(String id) {
@@ -124,6 +117,11 @@ public class UserServiceImpl extends BaseService implements UserService {
     @Override
     public UserAndRole finUserAndRole(UserAndRole userAndRole) {
         return (UserAndRole) daoSupport.findForObject("SysUserMapper.finUserAndRole",userAndRole);
+    }
+
+    @Override
+    public int isQuit(Map map) {
+        return daoSupport.update("SysUserMapper.isQuit",map);
     }
 
 }

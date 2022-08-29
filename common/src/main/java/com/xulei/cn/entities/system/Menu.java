@@ -14,4 +14,7 @@ public class Menu implements Serializable {
     //序号
     private Integer menu_order;
     private String pid;
+    //图标
+    private String icon;
+    private String createTime;
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CustomerMapper">
+
+    <select id="selectCustomerByOpenId" resultType="Customer" parameterType="java.lang.String">
+        select * from customer where openId=#{openId}
+    </select>
+
+    <insert id="save" parameterType="Customer">
+        insert into customer(id,nickName,sex,province,city,phone,openId,headImage)
+        values (#{id},#{nickName},#{sex},#{province},#{city},#{phone},#{openId},#{headImage})
+    </insert>
+
+    <update id="update" parameterType="Customer">
+        update
+            customer
+                set phone=#{phone}
+            where id=#{id}
+    </update>
+
+
+</mapper>

@@ -4,8 +4,8 @@
 
 
     <insert id="addRole" parameterType="Role" keyProperty="id" useGeneratedKeys="true">
-        insert into sys_role(id,name,hotelId,description,createTime)
-        values (#{id},#{name},#{hotelId},#{description},#{createTime})
+        insert into sys_role(id,name,clubId,description,createTime)
+        values (#{id},#{name},#{clubId},#{description},#{createTime})
     </insert>
 
 
@@ -14,9 +14,12 @@
         <if test="keywords!=null and keywords !=''">
             and name like concat('%', #{keywords}, '%')
         </if>
+        <if test="clubId!=null and clubId !=''">
+            and clubId=#{clubId}
+        </if>
     </select>
 
-    <select id="getRole" parameterType="java.lang.Integer" resultType="Role">
+    <select id="getRole" parameterType="java.lang.String" resultType="Role">
         select * from sys_role where id=#{id}
     </select>
 
@@ -27,13 +30,25 @@
         where id=#{id}
     </update>
 
-    <delete id="deleteRole" parameterType="java.lang.Integer">
+    <delete id="deleteRole" parameterType="java.lang.String">
         delete  from sys_role where id=#{id}
     </delete>
 
 
     <delete id="deleteRoleAndMenu" parameterType="java.lang.String">
         delete from role_menu where roleId=#{roleId}
+    </delete>
+
+    <delete id="deleteRoleAndTargets" parameterType="java.lang.String">
+        delete from role_target where roleId=#{roleId}
+    </delete>
+
+    <delete id="deleteRoleAndShops" parameterType="java.lang.String">
+        delete from role_data where roleId=#{roleId}
+    </delete>
+
+    <delete id="deleteRoleAndMenusApi" parameterType="java.lang.String">
+        delete from role_menu_api where roleId=#{roleId}
     </delete>
 
     <insert id="assginMenus" parameterType="java.util.List">
@@ -60,6 +75,15 @@
         VALUES
         <foreach collection ="list" item="user" separator =",">
             (#{user.id}, #{user.shopsId}, #{user.roleId})
+        </foreach >
+    </insert>
+
+    <insert id="assginMenusApi" parameterType="java.util.List">
+        INSERT INTO role_menu_api
+        (id, menuApiId, roleId)
+        VALUES
+        <foreach collection ="list" item="user" separator =",">
+            (#{user.id}, #{user.menuApiId}, #{user.roleId})
         </foreach >
     </insert>
 </mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MenuApiMapper">
+
+
+    <insert id="addMenuApi" parameterType="MenuApi">
+            insert into sys_menu_api(id,name,menuId,requestMethod,url)
+            values (#{id},#{name},#{menuId},#{requestMethod},#{url})
+    </insert>
+
+    <select id="getMenuApi" parameterType="java.lang.String" resultType="MenuApi">
+        select  * from sys_menu_api where id=#{id}
+    </select>
+
+    <select id="findAll" parameterType="java.util.Map" resultType="MenuApi">
+        select  * from sys_menu_api where 1=1 and menuId=#{menuId}
+        <if test="keywords!=null and keywords !=''">
+            and name like concat('%', #{keywords}, '%')
+        </if>
+
+    </select>
+
+    <update id="editMenuApi" parameterType="MenuApi">
+        update sys_menu_api
+               set name=#{name},
+                   url=#{url},
+                   requestMethod=#{requestMethod}
+        where id=#{id}
+    </update>
+
+    <delete id="deleteMenuApi" parameterType="java.lang.String">
+        delete from sys_menu_api where id=#{id}
+    </delete>
+
+    <select id="selectAllMenuApis" parameterType="java.lang.String" resultType="MenuApi">
+        select sm.*,(select name from sys_menu s where s.id=sm.menuId) menuName,
+         case when
+             rmi.id is not null then 1
+             else 0 end isChecked from
+                sys_menu_api sm
+            left join role_menu_api rmi on sm.id=rmi.menuApiId and rmi.roleId=#{roleId}
+    </select>
+
+</mapper>

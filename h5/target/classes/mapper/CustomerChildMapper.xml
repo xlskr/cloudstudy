@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CustomerChildMapper">
+    <insert id="save" parameterType="java.util.Map">
+        insert into customer_guessprize(id,childId,customerId,phone)
+        values (#{id},#{childId},#{customerId},#{phone})
+    </insert>
+
+    <select id="selectCustomerList" parameterType="java.util.Map" resultType="java.util.Map">
+        select  a.* from
+        (SELECT
+        a.nickName,
+        a.headImage,
+        b.phone,
+        group_concat(b.id) id,
+        group_concat(b.childId) sameIds,
+        DATE_FORMAT( b.createTime, '%Y-%m-%d %H:%i:%S' ) createTime,
+        b.isGet
+        FROM
+        customer a,
+        customer_guessprize b,
+        prize_child c,
+        prizes_quiz pq,
+        guess_info gi
+        WHERE
+        a.id = b.customerId
+        AND c.id = b.childId
+        AND pq.id = #{id} and gi.pqId=pq.id and c.guessId=gi.id
+        <if test="isGet !=null and isGet !=''">
+            and b.isGet=#{isGet}
+        </if>
+        <if test="keywords !=null and keywords !=''">
+            and a.phone like concat('%', #{keywords}, '%')
+        </if>
+        <if test="childId !=null and childId !=''">
+            and b.childId =#{childId}
+        </if>
+        group by nickName,headImage,phone,createTime,isGet) a
+        inner join
+        (SELECT
+        group_concat(gi.childId) sameIds
+        FROM
+        guess_info gi
+        WHERE
+        gi.pqId =#{id}) b
+        on b.sameIds=a.sameIds
+    </select>
+
+    <update id="changeGet" parameterType="java.util.List">
+        update customer_guessprize
+                    set isGet=1
+                where id in
+                <foreach item = "id" collection="list" separator="," open="(" close=")">
+                    #{id}
+                </foreach>
+    </update>
+
+    <select id="findIsGet" parameterType="java.util.Map" resultType="java.util.Map">
+        select cg.id,cg.phone from customer_guessprize cg where customerId=#{id} and exists (select 1 from prizes_quiz pq,guess_info gi,prize_child pc
+            where gi.pqId=pq.id and pq.id=#{prizeId} and cg.childId=pc.id and pc.guessId=gi.id
+            )
+        limit 1
+    </select>
+
+    <select id="getMyguess" parameterType="java.util.Map" resultMap="childResult">
+        SELECT
+            DISTINCT
+            pq.lc,
+            pq.id,
+            pq.status,
+            pq.num,
+            pq.awardsName,
+            case when now() BETWEEN startTime and endTime then 1
+                 ELSE 0 end  teamStatus,
+            b.customerId
+        FROM
+            customer_guessprize b,
+            prize_child c,
+            guess_info g,
+            prizes_quiz pq
+        where b.customerId=#{id} and c.id=b.childId and g.id=c.guessId
+          and pq.id=g.pqId and pq.pid=#{pqId}
+          order by teamStatus desc
+    </select>
+
+    <resultMap id="childResult" type="java.util.Map">
+        <id property="id" column="id"></id>
+        <result column="customerId" property="customerId"></result>
+        <result column="lc" property="lc"></result>
+        <result column="status" property="status"></result>
+        <result column="teamStatus" property="teamStatus"></result>
+        <result column="num" property="num"></result>
+        <result column="awardsName" property="awardsName"></result>
+        <collection property="childs" column="{id=id,customerId=customerId}" select="selectChild"></collection>
+    </resultMap>
+
+    <select id="selectChild" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+            g.name,
+            c.NAME guessName,
+            g.childName correctName,
+            b.isGet
+        FROM
+            customer_guessprize b,
+            prize_child c,
+            guess_info g,
+            prizes_quiz pq
+        WHERE
+            b.customerId = #{customerId}
+          AND c.id = b.childId
+          AND g.id = c.guessId
+          AND pq.id = g.pqId
+          AND pq.id = #{id}
+        ORDER BY
+            b.createTime DESC
+    </select>
+
+    <select id="getMyguessHistory" parameterType="java.util.Map" resultType="java.util.Map">
+        select
+                pq.id,
+                pq.lc,
+                DATE_FORMAT(pq.startTime,'%Y-%m-%d %H:%i:%S') startTime,
+                DATE_FORMAT(pq.endTime,'%Y-%m-%d %H:%i:%S') endTime
+            from prizes_quiz pq
+        where
+                pq.pid=#{pqId}
+              and pq.endTime &lt;now()
+              order by pq.startTime desc
+    </select>
+</mapper>

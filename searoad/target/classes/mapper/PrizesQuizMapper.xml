@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PrizesQuizMapper">
+
+    <insert id="add" parameterType="PrizesQuiz">
+        insert into prizes_quiz(id,lc,city,pic,startTime,endTime,`describe`,createTime,pid,name,awardsName,num)
+        values (#{id},#{lc},#{city},#{pic},#{startTime},#{endTime},#{describe},#{createTime},#{pid},#{name}
+        ,#{awardsName},#{num})
+    </insert>
+
+    <select id="getDeatilById" parameterType="java.lang.String" resultType="PrizesQuiz">
+        select *  from prizes_quiz where id=#{id};
+    </select>
+
+    <select id="getDeatilByPid" parameterType="java.lang.String" resultType="java.util.Map">
+        select * from prizes_quiz where pid=#{id} and startTime &lt; now() and endTime &gt;now()
+    </select>
+
+
+    <update id="update" parameterType="PrizesQuiz">
+        update
+            prizes_quiz
+         set
+             lc= #{lc},
+             pid=#{pid},
+             city= #{city},
+             pic= #{pic},
+             name= #{name},
+             awardsName=#{awardsName},
+             num=#{num},
+             startTime=#{startTime},
+             endTime=#{endTime},
+             `describe`= #{describe}
+        where id=#{id}
+    </update>
+
+    <update id="updateChild" parameterType="PrizesQuiz">
+        update
+            prizes_quiz
+        set
+            `describe`= #{describe},
+            city= #{city},
+            pic= #{pic},
+            name= #{name}
+         where pid=#{id}
+    </update>
+
+    <select id="findAll" parameterType="java.util.Map" resultType="PrizesQuiz">
+        select *  from prizes_quiz where 1=1
+        <if test="keywords !=null and keywords !=''">
+            and city like concat('%', #{keywords}, '%')
+        </if>
+        <choose>
+        <when test="isParent !=null and isParent !=''">
+            and pid is null
+        </when>
+        <otherwise>
+            and pid=#{pid}
+        </otherwise>
+        </choose>
+        order by createTime desc
+    </select>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from prizes_quiz where id=#{id}
+    </delete>
+
+    <update id="editStatus" parameterType="java.lang.String">
+        update prizes_quiz set status=1 where id=#{id}
+    </update>
+
+</mapper>

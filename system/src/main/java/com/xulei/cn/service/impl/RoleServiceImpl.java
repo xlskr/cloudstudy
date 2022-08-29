@@ -78,8 +78,8 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 
     @Override
     public void assginTargets(String roleId, List<String> targetIds) {
+        daoSupport.delete("RoleMapper.deleteRoleAndTargets",roleId);
         List<RoleAndTarget> roleAndTargets=new ArrayList<>();
-
         for(int i=0;i< targetIds.size();i++) {
             RoleAndTarget roleAndMenu = new RoleAndTarget();
             roleAndMenu.setRoleId(roleId);
@@ -92,6 +92,7 @@ public class RoleServiceImpl extends BaseService implements RoleService {
 
     @Override
     public void assginShops(String roleId, List<String> shopsIds) {
+        daoSupport.delete("RoleMapper.deleteRoleAndShops",roleId);
         List<RoleAndData> roleAndData=new ArrayList<>();
 
         for(int i=0;i< shopsIds.size();i++) {
@@ -101,9 +102,24 @@ public class RoleServiceImpl extends BaseService implements RoleService {
             roleAndMenu.setId(idWorker.nextId() + "");
             roleAndData.add(roleAndMenu);
         }
-
         daoSupport.save("RoleMapper.assginShops",roleAndData);
 
+    }
+
+    @Override
+    public void assginMenusApi(String roleId, List<String> menusApiIds) {
+        daoSupport.delete("RoleMapper.deleteRoleAndMenusApi",roleId);
+        List<RoleAndMenuApi> roleAndMenus=new ArrayList<>();
+
+        for(int i=0;i< menusApiIds.size();i++) {
+            RoleAndMenuApi roleAndMenu = new RoleAndMenuApi();
+            roleAndMenu.setRoleId(roleId);
+            roleAndMenu.setMenuApiId(menusApiIds.get(i));
+            roleAndMenu.setId(idWorker.nextId() + "");
+            roleAndMenus.add(roleAndMenu);
+        }
+
+        daoSupport.save("RoleMapper.assginMenusApi",roleAndMenus);
     }
 
 }

@@ -2,10 +2,8 @@ package com.xulei.cn;
 
 import com.xulei.cn.utils.IdWorker;
 import com.xulei.cn.utils.SmsSendUtils;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication(scanBasePackages = "com.xulei.cn")

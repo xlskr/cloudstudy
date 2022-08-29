@@ -1,6 +1,5 @@
 package com.xulei.cn.entities.system;
 
-import com.xulei.cn.entities.system.SysUser;
 import lombok.Data;
 
 import java.util.Date;

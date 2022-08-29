@@ -123,7 +123,7 @@ public class HttpUtils {
         return response;
     }
 
-    public String sendGet(String strUrl, Map<String, Object> data){
+    public static String sendGet(String strUrl, Map<String, Object> data){
         String responseParams = "";
         BufferedReader bufferedReader = null;
         try {
@@ -157,7 +157,7 @@ public class HttpUtils {
         return responseParams;
     }
 
-    private String toString(Map<String, Object> data) {
+    private static String toString(Map<String, Object> data) {
         //得到了node集合
         Set<Map.Entry<String, Object>> entries = data.entrySet();
         //遍历

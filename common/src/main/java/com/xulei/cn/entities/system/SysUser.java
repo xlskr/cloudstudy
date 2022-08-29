@@ -11,7 +11,7 @@ public class SysUser implements Serializable {
     private String id;
     private String name;
     private String phone;
-    private String hotelId;
+//    private String hotelId;
 
     private Integer isSuper;
 

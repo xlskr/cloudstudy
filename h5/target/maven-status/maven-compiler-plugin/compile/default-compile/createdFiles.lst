@@ -1,0 +1,12 @@
+com\xulei\cn\service\impl\CustomerServiceImpl.class
+com\xulei\cn\dao\DAO.class
+com\xulei\cn\controller\MainIndexController.class
+com\xulei\cn\config\ReidsConfig.class
+com\xulei\cn\controller\CustomerPrizeController.class
+com\xulei\cn\service\CustomerService.class
+com\xulei\cn\dao\DaoSupport.class
+com\xulei\cn\H5Application.class
+com\xulei\cn\config\MyBatisConfig.class
+com\xulei\cn\service\CustomerChildService.class
+com\xulei\cn\service\impl\CustomerChildServiceImpl.class
+com\xulei\cn\fegin\SearoadService.class

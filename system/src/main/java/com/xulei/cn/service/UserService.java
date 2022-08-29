@@ -33,11 +33,11 @@ public interface UserService {
     List<Menu> findMenusByUser(SysUser user);
 
     //=================下面的两个方法和门店有关
-    ShopsUser getShopsUser(String id);
 
-    PageInfo<ShopsUser> getAllShopsUser(Map map);
 
     int delete(String id);
 
     UserAndRole finUserAndRole(UserAndRole userAndRole);
+
+    int isQuit(Map map);
 }

@@ -1,7 +1,6 @@
 package com.xulei.cn.service;
 
 import com.github.pagehelper.PageInfo;
-import com.xulei.cn.entities.system.Menu;
 import com.xulei.cn.entities.system.Role;
 
 import java.util.List;
@@ -23,4 +22,6 @@ public interface RoleService {
     void assginTargets(String roleId, List<String> targetIds);
 
     void assginShops(String roleId, List<String> shopsIds);
+
+    void assginMenusApi(String roleId, List<String> menusApiIds);
 }
